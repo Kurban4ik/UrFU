@@ -1,5 +1,26 @@
+import asyncio
 import time
 from sys import byteorder
+def num_to_time_bytes(num):
+    num = bin(num)[2:]
+    marc = len(num) - 1
+    res1 = ''
+    res2 = ''
+    for i in range(8):
+        if marc >= 0:
+            res1 += num[marc]
+        else:
+            res1 += '0'
+
+        marc -= 1
+    for i in range(8):
+        if marc >= 0:
+            res2 += num[marc]
+        else:
+            res2 += '0'
+        marc -= 1
+    res1, res2 = res1[::-1], res2[::-1]
+    return int(res2, 2).to_bytes(1, byteorder='big')+ int(res1, 2).to_bytes(1, byteorder='big')
 
 from connection import create_connection, send_command, host, port
 
@@ -12,26 +33,36 @@ connect = create_connection(host, port)
 
 
 def set_speed(speed):
+    speed = int(speed)
     setfullspeed = (b'\xFF\x02\x01' + speed.to_bytes(1, byteorder='big') + b'\xFF' +
                     b'\xFF\x02\x02' + speed.to_bytes(1, byteorder='big') + b'\xFF')
     send_command(connect, setfullspeed)
 
-def fw():
-    send_command(connect, forward)
+def fw(t):
+    t *= 1000
+    t = int(t)
+    send_command(connect, b'\xff\xfd' + num_to_time_bytes(t) + b'\xff')
+
 
 def stop_moving():
     send_command(connect, stop)
 
-def back():
-    send_command(connect, reverse)
+def back(t):
+    t *= 1000
+    t = int(t)
+    send_command(connect, b'\xff\xf4' + num_to_time_bytes(t) + b'\xff')
 
 
-def left():
-    send_command(connect, turn_left)
+def left(t):
+    t *= 1000
+    t = int(t)
+    send_command(connect, b'\xff\xf5' + num_to_time_bytes(t) + b'\xff')
 
 
-def right():
-    send_command(connect, turn_right)
+def right(t):
+    t *= 1000
+    t = int(t)
+    send_command(connect, b'\xff\xf6' + num_to_time_bytes(t) + b'\xff')
 
 def set_servo_angle(angle, num):
     send_command(connect, b'\xFF\x01' + int(num).to_bytes(1, byteorder='big') +
@@ -40,8 +71,8 @@ def set_servo_angle(angle, num):
     time.sleep(0.5)
 
 def normal():
+    set_servo_angle(75, 7)
     set_servo_angle(20, 8)
-    set_servo_angle(80, 7)
     set_servo_angle(60, 4)
     set_servo_angle(80, 4)
     set_servo_angle(50, 3)
@@ -51,17 +82,23 @@ def normal():
 
 def straight_servo():
     set_servo_angle(93, 3)
-    set_servo_angle(180 , 2)
-    set_servo_angle(86, 1)
+    set_servo_angle(150 , 2)
+    set_servo_angle(93, 1)
+    set_servo_angle(180, 2)
+
+    set_servo_angle(87, 1)
 
 
 def prepare_to_catch():
     set_servo_angle(93, 3)
     set_servo_angle(50, 4)
 
-def catch():
-    set_servo_angle(85, 1)
+def catch_ball():
     set_servo_angle(87, 4)
+
+def catch_box():
+    set_servo_angle(76, 4)
+
 
 def up():
     for j in range(120, 180, 20):
@@ -76,4 +113,6 @@ def scenario1():
     straight_servo()
 
 if __name__ == '__main__':
-    set_servo_angle(160, 1)
+    set_servo_angle(75, 7)
+    set_servo_angle(10, 8)
+    # back(1)

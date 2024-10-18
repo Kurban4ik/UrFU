@@ -2,30 +2,31 @@ import keyboard  # using module keyboard
 import socket
 
 from connection import send_command, create_connection, close_connection
-from move_commands import set_speed, fw, left, back, right, stop_moving, scenario1, put, normal, connect, host, port, catch, up
+from move_commands import set_speed, fw, left, back, right, stop_moving, scenario1, put, normal, connect, host, port, catch_ball, up
+from movement_control.move_commands import prepare_to_catch
 
 set_speed(40)
 
 active = 'l'
-
+micro_tik = 0.1
 iterr = 0
 while True:  # making a loop
     try:  # used try so that if user pressed other than the given key error will not be shown
         if keyboard.is_pressed('a'):  # if key 'q' is pressed
             if active != 'l':
-                left()
+                left(micro_tik)
             active = 'l'
         elif keyboard.is_pressed('d'):  # if key 'q' is pressed
             if active != 'r':
-                right()
+                right(micro_tik)
             active = 'r'
         elif keyboard.is_pressed('w'):  # if key 'q' is pressed
             if active != 'w':
-                fw()
+                fw(micro_tik)
             active = 'w'
         elif keyboard.is_pressed('s'):  # if key 'q' is pressed
             if active == 's':
-                back()
+                back(micro_tik)
             active = 's'
         elif keyboard.is_pressed('h'):
             scenario1()
@@ -34,8 +35,10 @@ while True:  # making a loop
         elif keyboard.is_pressed('n'):
             normal()
         elif keyboard.is_pressed('c'):
-            catch()
+            catch_ball()
             up()
+        elif keyboard.is_pressed('p'):
+            prepare_to_catch()
         else:
             if active != ' ':
                 stop_moving()
