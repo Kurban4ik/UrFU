@@ -97,7 +97,7 @@ def catch_ball():
     set_servo_angle(87, 4)
 
 def catch_box():
-    set_servo_angle(76, 4)
+    set_servo_angle(72, 4)
 
 
 def up():
