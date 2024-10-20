@@ -124,7 +124,5 @@ def scenario1():
     prepare_to_catch()
     straight_servo()
 if __name__ == '__main__':
-    turn_onoff_lights()
-    time.sleep(1)
-    turn_onoff_lights()
-    time.sleep(1)
+    send_command(connect, b'\xff\x40\x09\x08\xff')
+

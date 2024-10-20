@@ -44,6 +44,8 @@ while True:  # making a loop
             up()
         elif keyboard.is_pressed('p'):
             prepare_to_catch()
+        elif keyboard.is_pressed('u'):
+            start_autocatch()
         else:
             if active != ' ':
                 stop_moving()
