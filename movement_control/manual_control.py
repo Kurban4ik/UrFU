@@ -1,9 +1,10 @@
-import keyboard  # using module keyboard
-import socket
+from time import sleep
 
-from connection import send_command, create_connection, close_connection
-from move_commands import set_speed, fw, left, back, right, stop_moving, scenario1, put, normal, connect, host, port, catch_ball, up
-from movement_control.move_commands import prepare_to_catch
+import keyboard  # using module keyboard
+
+from connection import send_command
+from move_commands import prepare_to_catch, set_speed, fw, left, back, right, stop_moving, scenario1, put, normal, connect, host, port, catch_ball, up
+from movement_control.move_commands import turn_right, turn_onoff_lights
 
 set_speed(40)
 
@@ -15,18 +16,22 @@ while True:  # making a loop
         if keyboard.is_pressed('a'):  # if key 'q' is pressed
             if active != 'l':
                 left(micro_tik)
+                sleep(micro_tik)
             active = 'l'
         elif keyboard.is_pressed('d'):  # if key 'q' is pressed
             if active != 'r':
                 right(micro_tik)
+                sleep(micro_tik)
             active = 'r'
         elif keyboard.is_pressed('w'):  # if key 'q' is pressed
             if active != 'w':
                 fw(micro_tik)
+                sleep(micro_tik)
             active = 'w'
         elif keyboard.is_pressed('s'):  # if key 'q' is pressed
             if active == 's':
                 back(micro_tik)
+                sleep(micro_tik)
             active = 's'
         elif keyboard.is_pressed('h'):
             scenario1()

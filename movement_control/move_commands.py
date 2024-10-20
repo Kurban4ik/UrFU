@@ -29,7 +29,11 @@ stop = b'\xFF\x00\x00\x00\xFF'
 turn_left = b'\xFF\x00\x03\x00\xFF'
 turn_right = b'\xFF\x00\x04\x00\xFF'
 reverse = b'\xFF\x00\x02\x00\xFF'
+
 connect = create_connection(host, port)
+
+def costyl_fw():
+    send_command(connect, forward)
 
 
 def set_speed(speed):
@@ -87,7 +91,15 @@ def straight_servo():
     set_servo_angle(180, 2)
 
     set_servo_angle(87, 1)
-
+lights_on = 0
+def turn_onoff_lights():
+    global lights_on
+    if lights_on:
+        send_command(connect, b'\xff\x40\x09\x00\xff')
+        lights_on = 0
+    else:
+        send_command(connect, b'\xff\x40\x09\x08\xff')
+        lights_on = 1
 
 def prepare_to_catch():
     set_servo_angle(93, 3)
@@ -111,8 +123,8 @@ def put():
 def scenario1():
     prepare_to_catch()
     straight_servo()
-
 if __name__ == '__main__':
-    set_servo_angle(75, 7)
-    set_servo_angle(10, 8)
-    # back(1)
+    turn_onoff_lights()
+    time.sleep(1)
+    turn_onoff_lights()
+    time.sleep(1)

@@ -1,4 +1,5 @@
 import socket
+from time import sleep
 
 host = "192.168.2.35"
 port = 2001
@@ -11,8 +12,8 @@ def create_connection(host, port):
 def send_command(connection, command):
     try:
         connection.sendall(command)
-        data = connection.recv(1024)
-        print(data)
+        #data = connection.recv(1024)
+        #print(data)
         return True
     except socket.error as e:
         print(f"Ошибка сокета: {e}")
@@ -23,5 +24,10 @@ def close_connection(connection):
 
 if __name__ == '__main__':
     c = create_connection(host, port)
-    print(send_command(c, b'\xff\x31\x00\x00\xff'))
-    close_connection(c)
+    forward = b'\xFF\x00\x01\x00\xFF'
+    print(send_command(c, forward))
+    sleep(1)
+    stop = b'\xFF\x00\x00\x00\xFF'
+    send_command(c, stop)
+    close_
+
