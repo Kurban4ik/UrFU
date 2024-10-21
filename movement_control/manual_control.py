@@ -11,6 +11,7 @@ set_speed(40)
 active = 'l'
 micro_tik = 0.1
 iterr = 0
+
 while True:  # making a loop
     try:  # used try so that if user pressed other than the given key error will not be shown
         if keyboard.is_pressed('a'):  # if key 'q' is pressed
@@ -44,8 +45,6 @@ while True:  # making a loop
             up()
         elif keyboard.is_pressed('p'):
             prepare_to_catch()
-        elif keyboard.is_pressed('u'):
-            start_autocatch()
         else:
             if active != ' ':
                 stop_moving()

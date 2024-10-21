@@ -1,19 +1,28 @@
-from movement_control.catch import come_at_distance
+from multiprocessing import Process, Value
+import time
 
+def increment(shared_var):
+    for _ in range(10):
+        time.sleep(1)
+        with shared_var.get_lock():  # Защита от состояний гонки
+            shared_var.value += 1
+            print(f'Incremented: {shared_var.value}')
 
-def is_distance_good():
-    return
+def decrement(shared_var):
+    for _ in range(10):
+        time.sleep(1)
+        with shared_var.get_lock():  # Защита от состояний гонки
+            shared_var.value -= 1
+            print(f'Decremented: {shared_var.value}')
 
-def make_a_move_to_bring(dots):
-    x, y, X, Y = dots
-    x_mid = (x + X) // 2
-    y_mid = (y + Y) // 2
-    if not (380 < x_mid < 420):
-        return 'rotate', x_mid, 400
-    elif is_distance_good():
-        return 'catch', 'put_in_basket'
-    else:
-        return 'come', 5
+if __name__ == '__main__':
+    shared_var = Value('i', 0)  # 'i' означает тип integer
 
-    come_at_distance(10)
+    p1 = Process(target=increment, args=(shared_var,))
+    p2 = Process(target=decrement, args=(shared_var,))
 
+    p1.start()
+    p2.start()
+
+    p1.join()
+    p2.join()

@@ -7,7 +7,7 @@ catch_methods = {0: make_a_move_to_ball, 8: make_a_move_to_cube}
 catching = {'box': catch_box, 'ball': catch_ball}
 
 
-def react():
+def react(shared_var):
     f = open('cur_inf.txt', encoding='UTF-8')
     current_pos = list(map(float, f.readline().split()))
     try:
@@ -37,9 +37,9 @@ def react():
     else:
         pass
         # rotate_to_pix(0, 600)
-
-
     return 0.5
+
+
 while True:
     t = react()
     sleep(t + 0.05)

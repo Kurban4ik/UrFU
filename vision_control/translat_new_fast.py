@@ -29,7 +29,7 @@ current_pos = None
 bts = bytes()
 threads = []
 cls_id = 8
-def do():
+def do(shared_val):
     global bts, current_pos
     bts += stream.read(1024)
     a = bts.find(b'\xff\xd8')
@@ -37,7 +37,6 @@ def do():
     if a != -1 and b != -1:
         jpg = bts[a:b + 2]
         bts = bts[b + 2:]
-
         frame = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
         predict = model.predict(frame, conf=0.7)
         frame = predict[0].plot()
